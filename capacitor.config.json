@@ -1,0 +1,10 @@
+{
+  "appId": "pl.waroflords.app",
+  "appName": "War of Lords",
+  "webDir": "www",
+  "plugins": {
+    "CapacitorUpdater": {
+      "autoUpdate": false
+    }
+  }
+}

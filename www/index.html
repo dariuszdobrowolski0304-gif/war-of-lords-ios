@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>War of Lords</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+    <!-- ================= LOGIN ================= -->
+    <section id="screen-login" class="screen active">
+        <div class="login-card">
+            <h1 class="brand">War of Lords</h1>
+            <p class="brand-sub">Panel dowódcy</p>
+            <form id="loginForm">
+                <input type="text" id="loginIdentifier" placeholder="Nazwa użytkownika lub email" autocomplete="username" required>
+                <input type="password" id="loginPassword" placeholder="Hasło" autocomplete="current-password" required>
+                <button type="submit" class="btn-primary">Zaloguj się</button>
+            </form>
+            <p id="loginError" class="error-text"></p>
+            <div class="legal-links">
+                <button type="button" data-legal="regulamin">Regulamin</button>
+                <span>·</span>
+                <button type="button" data-legal="polityka">Polityka prywatności</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= MENU GŁÓWNE ================= -->
+    <section id="screen-menu" class="screen">
+        <header class="screen-header">
+            <h2>War of Lords</h2>
+            <button id="btnLogout" class="btn-ghost">Wyloguj</button>
+        </header>
+        <div class="return-leave-row">
+            <button id="btnReturnToGame" class="btn-primary return-to-game-btn">🔙 Wróć do gry</button>
+            <button id="btnLeaveGame" class="btn-primary leave-game-btn">🚪 Opuść grę</button>
+        </div>
+        <div class="menu-grid">
+            <button class="menu-tile" data-nav="rooms"><span class="menu-icon">⚔️</span>Pokoje</button>
+            <button class="menu-tile" data-nav="tournaments"><span class="menu-icon">🏆</span>Turnieje</button>
+            <button class="menu-tile" data-nav="shop"><span class="menu-icon">🛒</span>Sklep</button>
+            <button class="menu-tile" data-nav="ranking"><span class="menu-icon">📊</span>Ranking</button>
+            <button class="menu-tile" data-nav="profile"><span class="menu-icon">👤</span>Profil</button>
+        </div>
+        <button id="btnCheckUpdate" class="btn-ghost update-btn">🔄 Sprawdź aktualizacje</button>
+        <p id="updateStatus" class="hint-text update-status"></p>
+        <p class="hint-text update-status">Wersja: <span id="currentVersionLabel">?</span></p>
+    </section>
+
+    <!-- ================= ROOMS ================= -->
+    <section id="screen-rooms" class="screen">
+        <header class="screen-header">
+            <button class="btn-ghost" data-nav="menu">← Menu</button>
+            <h2>Pokoje Bitewne</h2>
+        </header>
+        <div id="roomsList" class="rooms-list">
+            <p class="hint-text">Ładowanie pokoi...</p>
+        </div>
+    </section>
+
+    <!-- ================= TURNIEJE ================= -->
+    <section id="screen-tournaments" class="screen">
+        <header class="screen-header">
+            <button class="btn-ghost" data-nav="menu">← Menu</button>
+            <h2>Turnieje</h2>
+        </header>
+        <div id="tournamentsContent" class="rooms-list">
+            <p class="hint-text">Ładowanie...</p>
+        </div>
+    </section>
+
+    <!-- ================= SKLEP ================= -->
+    <section id="screen-shop" class="screen">
+        <header class="screen-header">
+            <button class="btn-ghost" data-nav="menu">← Menu</button>
+            <h2>Sklep</h2>
+        </header>
+        <div id="shopContent" class="rooms-list">
+            <p class="hint-text">Ładowanie...</p>
+        </div>
+    </section>
+
+    <!-- ================= RANKING ================= -->
+    <section id="screen-ranking" class="screen">
+        <header class="screen-header">
+            <button class="btn-ghost" data-nav="menu">← Menu</button>
+            <h2>Ranking Ogólny</h2>
+        </header>
+        <div id="rankingContent" class="rooms-list">
+            <p class="hint-text">Ładowanie...</p>
+        </div>
+    </section>
+
+    <!-- ================= PROFIL ================= -->
+    <section id="screen-profile" class="screen">
+        <header class="screen-header">
+            <button class="btn-ghost" data-nav="menu">← Menu</button>
+            <h2>Profil</h2>
+        </header>
+        <div id="profileContent" class="rooms-list">
+            <p class="hint-text">Ładowanie...</p>
+        </div>
+    </section>
+
+    <!-- ================= POCZEKALNIA (zwykłe pokoje — lista graczy na żywo) ================= -->
+    <section id="screen-lobby" class="screen">
+        <header class="screen-header">
+            <button class="btn-ghost" id="btnLeaveLobby">← Opuść</button>
+            <h2 id="lobbyRoomName">Pokój</h2>
+        </header>
+        <p id="lobbySettings" class="hint-text" style="padding:0 16px 8px;"></p>
+        <p id="lobbyCountdown" class="hint-text" style="padding:0 16px; font-weight:700; color:#e8c766;"></p>
+        <div id="lobbyPlayersList" class="rooms-list"></div>
+        <button id="btnLobbyReady" class="btn-primary" style="display:none; margin:10px 16px; width:calc(100% - 32px);">Gotowy</button>
+        <button id="btnAddBot" class="btn-primary" style="display:none; margin:10px 16px; width:calc(100% - 32px);">+ Dodaj bota</button>
+    </section>
+
+    <!-- ================= WAITING (Mini-Turnieje — matchmaking w ciemno) ================= -->
+    <section id="screen-waiting" class="screen">
+        <div class="waiting-card">
+            <div class="spinner" id="waitingSpinner"></div>
+            <h2 id="waitingTitle">Szukam graczy...</h2>
+            <p id="waitingSubtitle" class="hint-text"></p>
+            <button id="btnAcceptMatch" class="btn-primary" style="display:none;">Akceptuj</button>
+            <button id="btnCancelWaiting" class="btn-ghost">Anuluj</button>
+        </div>
+    </section>
+
+    <!-- ================= RESUMING (powrót do trwającej rozgrywki) ================= -->
+    <section id="screen-resuming" class="screen">
+        <div class="waiting-card">
+            <div class="spinner"></div>
+            <h2>Wracam do rozgrywki...</h2>
+            <p class="hint-text">Łączenie z trwającą rundą.</p>
+            <button id="btnCancelResume" class="btn-ghost">Wróć do menu</button>
+        </div>
+    </section>
+
+    <!-- ================= GAME ================= -->
+    <section id="screen-game" class="screen">
+        <header class="game-topbar">
+            <div class="stat"><span class="stat-label">Skarbiec</span><span class="stat-value" id="statGold">0</span></div>
+            <div class="stat"><span class="stat-label">Populacja</span><span class="stat-value" id="statPop">0/0</span></div>
+            <div class="stat"><span class="stat-label">Koniec rundy</span><span class="stat-value" id="statTimer">--:--:--</span></div>
+            <button id="btnExitGame" class="btn-primary exit-game-btn">Wyjdź z gry</button>
+        </header>
+
+        <select id="villageSwitcher" class="village-switcher"></select>
+
+        <main class="tab-content">
+            <div id="tab-build" class="tab-panel"></div>
+            <div id="tab-map" class="tab-panel active"></div>
+            <div id="tab-army" class="tab-panel"></div>
+            <div id="tab-ranking" class="tab-panel"></div>
+            <div id="tab-reports" class="tab-panel"></div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn" data-tab="build"><span class="nav-icon">🔨</span>Rozbudowa</button>
+            <button class="nav-btn active" data-tab="map"><span class="nav-icon">🗺️</span>Mapa</button>
+            <button class="nav-btn" data-tab="army"><span class="nav-icon">⚔️</span>Wojska</button>
+            <button class="nav-btn" data-tab="ranking"><span class="nav-icon">📊</span>Ranking</button>
+            <button class="nav-btn" data-tab="reports"><span class="nav-icon">📜</span>Raporty</button>
+        </nav>
+
+        <!-- Wielkie odliczanie tuz przed koniecem rundy - to samo co desktopowe game.html -
+             serwer wysyla roundEnding kilka sekund przed faktycznym zakonczeniem (payout/prizeResults
+             licza sie w tym czasie w tle), potem roundFinished/game:state z roundStatus:'finished'. -->
+        <div id="roundEndingOverlay" class="round-ending-overlay">
+            <div class="round-ending-text" id="roundEndingText">Runda się kończy...</div>
+            <div class="round-ending-countdown" id="roundEndingCountdown">5</div>
+        </div>
+
+        <!-- Ekran wynikow rundy - TOP3 punkty/zabojstwa, wyniki druzynowe (tryb team), nagrody VPLN
+             (Mini-Turniej/Final) - dokladnie te same dane co desktopowe #roundResultModal w game.html,
+             tylko w prostszym, jednoekranowym ukladzie. -->
+        <div id="roundResultModal" class="round-result-modal">
+            <div class="round-result-card">
+                <h2>🏁 Wyniki rundy</h2>
+                <div id="prizeResultsBlock" class="panel-card" style="display:none;">
+                    <h3>💰 Nagrody VPLN</h3>
+                    <div id="prizeResultsList"></div>
+                </div>
+                <div id="teamResultsBlock" class="panel-card" style="display:none;">
+                    <h3>👥 Wynik drużynowy</h3>
+                    <div id="teamResultsList"></div>
+                </div>
+                <div class="panel-card">
+                    <h3>🏆 TOP 3 — Punkty</h3>
+                    <div id="pointsResultsList"></div>
+                </div>
+                <div class="panel-card">
+                    <h3>⚔️ TOP 3 — Zabójstwa (Agresor)</h3>
+                    <div id="killsResultsList"></div>
+                </div>
+                <button id="btnCloseRoundResults" class="btn-primary">Powrót do menu</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stopka widoczna na kazdym ekranie (poza jakimkolwiek .screen, wiec nie znika przy
+         przelaczaniu ekranow) - zajmuje stala, mala przestrzen zarezerwowana w .screen{height}
+         ponizej, tak jak site-footer.js robi to na kazdej stronie desktopowej. -->
+    <footer id="appFooter">
+        <button type="button" data-legal="regulamin">Regulamin</button><span>·</span>
+        <button type="button" data-legal="polityka">Polityka</button><span>·</span>
+        <button type="button" data-legal="zasady">Zasady gry</button><span>·</span>
+        <button type="button" data-legal="zasady-turniej">Zasady Turnieju</button><span>·</span>
+        <button type="button" data-legal="zasady-mini-turniej">Zasady Mini-Turniejów</button>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <!-- Same shared, authoritative game-logic module the desktop client uses (public/gameEngine.js
+         on the server) — loaded remotely so read-only helpers like population capacity always stay
+         in sync with the real game balance, without duplicating/guessing the formulas here. -->
+    <script src="https://waroflords.pl/gameEngine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
