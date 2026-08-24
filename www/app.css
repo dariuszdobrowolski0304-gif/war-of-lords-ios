@@ -2,6 +2,11 @@
 
 :root {
     --footer-height: 34px;
+    /* iPhone notch/Dynamic Island + home-indicator gesture bar - 0px on Android/older iPhones since
+       env() falls back to the second argument there. Requires viewport-fit=cover in index.html's
+       viewport meta tag, otherwise these always resolve to 0 even on notched iPhones. */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
     --bg-dark: #0a0e1a;
     --bg-panel: rgba(20, 25, 35, 0.92);
     /* Trochę bardziej przezroczysty niż wcześniej (było 0.85) - żeby tło aplikacji
@@ -31,6 +36,9 @@ html, body {
     color: var(--text);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow-x: hidden;
+    /* Pushes the whole app below the iPhone notch/status bar - without this, the topbar/buttons on
+       every screen render partly underneath it and become untappable. */
+    padding-top: var(--safe-top);
 }
 
 /* height (not min-height) so a screen can never grow taller than the viewport — without this cap,
@@ -39,15 +47,15 @@ html, body {
    pinned at the screen's bottom edge while only .tab-content scrolls internally (flex:1 + its own
    overflow-y:auto, see below). calc(...) here reserves #appFooter's own fixed height (see below) so
    the footer always has room below every screen instead of overlapping it. */
-.screen { display: none; height: calc(100vh - var(--footer-height)); flex-direction: column; overflow: hidden; }
+.screen { display: none; height: calc(100vh - var(--footer-height) - var(--safe-top) - var(--safe-bottom)); flex-direction: column; overflow: hidden; }
 .screen.active { display: flex; }
 
 /* Stopka widoczna na kazdym ekranie (poza .screen, wiec przetrwa przelaczanie miedzy nimi) - ten
    sam zestaw linkow co site-footer.js na kazdej stronie desktopowej, tylko dopasowany do
    waskiego, malego paska zamiast pelnej karty. */
 #appFooter {
-    height: var(--footer-height); box-sizing: border-box; display: flex; align-items: center; justify-content: center;
-    flex-wrap: wrap; gap: 2px 6px; padding: 2px 10px; background: rgba(8,12,26,0.96);
+    height: calc(var(--footer-height) + var(--safe-bottom)); box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 2px 6px; padding: 2px 10px; padding-bottom: calc(2px + var(--safe-bottom)); background: rgba(8,12,26,0.96);
     border-top: 1px solid rgba(212,175,55,0.25);
 }
 #appFooter button { background: none; border: none; color: var(--text-dim); font-size: 10px; padding: 2px; }
