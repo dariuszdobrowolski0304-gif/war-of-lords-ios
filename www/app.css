@@ -35,7 +35,14 @@ html, body {
     background-color: #0a0e1a;
     color: var(--text);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-x: hidden;
+    /* The document itself must never scroll - every screen is a fixed, full-height shell (only
+       .tab-content/inner lists scroll internally, see .screen below). Without overflow-y:hidden
+       here, adding safe-top padding made the document a hair taller than the visual viewport on
+       notched iPhones, so iOS let the whole page rubber-band/drag - it looked "too low" until
+       manually dragged into its real resting position. */
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
     /* Pushes the whole app below the iPhone notch/status bar - without this, the topbar/buttons on
        every screen render partly underneath it and become untappable. */
     padding-top: var(--safe-top);
